@@ -1,4 +1,4 @@
-package Set
+package domainModelling.Set
 
 import collection.immutable.List
 

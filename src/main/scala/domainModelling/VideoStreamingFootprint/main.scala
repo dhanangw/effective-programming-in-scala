@@ -1,4 +1,4 @@
-package VideoStreamingFootprint
+package domainModelling.VideoStreamingFootprint
 
 
 object main {
