@@ -73,7 +73,7 @@ object main {
     val trajectoryLine = positions.zip(positions.tail)
 
     // limits trajectoryLine calculation
-    trajectoryLine.takeWhile((position1: Position, _: Position) => isNotTooFar(position1))
+    trajectoryLine.takeWhile((p1, _) => isNotTooFar(p1))
     // check whether the trajectory goes through the hoop or not.
       .exists(line => goesThroughHoop(line)) 
   }
