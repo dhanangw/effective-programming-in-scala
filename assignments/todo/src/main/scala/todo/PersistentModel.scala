@@ -96,28 +96,51 @@ object PersistentModel extends Model:
    */
 
   def create(task: Task): Id =
-    ???
+    val latestId = loadId()
+    val tasks = loadTasks().toMap + (latestId -> task)
+    saveTasks(Tasks(tasks))
+    saveId(latestId.next)
+    latestId
 
   def read(id: Id): Option[Task] =
-    ???
+    val task = loadTasks().toMap.get(id)
+    task 
 
   def update(id: Id)(f: Task => Task): Option[Task] =
-    ???
+    val tasks = loadTasks().toMap
+    val updatedTasks = tasks.map((taskId: Id, task: Task) => {
+      taskId match 
+          case id => taskId -> f(task)
+          case _ => taskId -> task
+    }) 
+    saveTasks(Tasks(updatedTasks))
+    updatedTasks.get(id) 
 
   def delete(id: Id): Boolean =
-    ???
+    val tasks = loadTasks().toMap
+    val found = tasks.contains(id)
+    if found then
+      val newTasks = tasks - id
+      saveTasks(Tasks(newTasks))
+    found
 
   def tasks: Tasks =
-    ???
+    val tasks = loadTasks()
+    tasks
 
   def tasks(tag: Tag): Tasks =
-    ???
+    val tasks = loadTasks().toMap
+    val tasksWithTag = tasks.filter((id: Id, task: Task) => task.tags.contains(tag)).toList
+    Tasks(tasksWithTag)
 
   def complete(id: Id): Option[Task] =
-    ???
+    update(id)(task => task.complete)
 
   def tags: Tags =
-    ???
+    val tasks = loadTasks().toMap
+    val tags = tasks.flatMap((id: Id, task: Task) => task.tags).toSet.toList
+    Tags(tags)
 
   def clear(): Unit =
-    ???
+    saveTasks(Tasks(List()))
+
