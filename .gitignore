@@ -2,3 +2,8 @@
 *.log
 .bsp/
 target/
+.metals/
+.bloop/
+metals.sbt
+bloop.sbt
+
