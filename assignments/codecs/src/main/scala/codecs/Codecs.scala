@@ -249,6 +249,7 @@ trait DecoderInstances:
   def field[A](name: String)(using decoder: Decoder[A]): Decoder[A] =
     Decoder.fromFunction {
       case Json.Obj(o) => decoder.decode(o(name))
+      case _ => None
     }
 
 end DecoderInstances
