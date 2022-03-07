@@ -247,7 +247,9 @@ trait DecoderInstances:
     * the supplied `name` using the given `decoder`.
     */
   def field[A](name: String)(using decoder: Decoder[A]): Decoder[A] =
-    Decoder.fromFunction(a => decoder.decode(a))
+    Decoder.fromFunction {
+      case Json.Obj(o) => decoder.decode(o(name))
+    }
 
 end DecoderInstances
 
@@ -282,7 +284,6 @@ object Contacts extends ContactsCodecs
 
 trait ContactsCodecs:
 
-  // TODO Define the encoder and the decoder for `Contacts`
   // The JSON representation of a value of type `Contacts` should be
   // a JSON object with a single field named “people” containing an
   // array of values of type `Person` (reuse the `Person` codecs)
